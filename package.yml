@@ -1,0 +1,15 @@
+package: community.lazycat.app.ayakaleaf
+version: 6.3.1
+name: Ayakaleaf Pro
+description: "The ultimate open-source Overleaf extension and alternative: Overleaf Community Edition enhanced with nearly all Pro features (SSO, AI assistant, Git sync, track changes, Zotero and more)"
+min_os_version: 1.5.0
+author: ayaka-notes
+license: AGPL-3.0
+homepage: https://github.com/ayaka-notes/ayakaleaf-pro
+locales:
+  zh:
+    name: "Ayakaleaf Pro"
+    description: "开源 Overleaf 增强替代：Community Edition 加持几乎所有 Pro 特性（Git 同步、修订追踪、Zotero/Mendeley、管理面板等）"
+  en:
+    name: "Ayakaleaf Pro"
+    description: "Overleaf Community Edition enhanced with nearly all Pro features"

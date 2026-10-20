@@ -1,0 +1,13 @@
+params:
+  - id: admin_email
+    type: string
+    name: "Admin Email"
+    description: "Email of the first registered user becomes admin (also used as contact)"
+    default_value: "admin@example.com"
+    optional: true
+
+locales:
+  zh:
+    admin_email:
+      name: "管理员邮箱"
+      description: "首位注册用户自动成为管理员（也用作站点联系邮箱）"

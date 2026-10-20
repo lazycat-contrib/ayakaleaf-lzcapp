@@ -1,0 +1,74 @@
+application:
+  subdomain: ayakaleaf
+  background_task: true
+  multi_instance: false
+  public_path:
+    - /
+  upstreams:
+    - location: /
+      backend: http://sharelatex:80/
+
+services:
+  sharelatex:
+    # upstream: sharelatex/sharelatex:6.3.1（Ayakaleaf Pro，Overleaf 增强版）
+    image: docker.1ms.run/sharelatex/sharelatex:6.3.1@sha256:8aa1d8bff9e45257c5e7ff0f2415c6b0befceec169be86c340eda16e1059fd51
+    depends_on:
+      - mongo
+      - redis
+    environment:
+      - TZ=Asia/Shanghai
+      - OVERLEAF_APP_NAME=Ayakaleaf Pro
+      - OVERLEAF_MONGO_URL=mongodb://mongo/sharelatex
+      - OVERLEAF_REDIS_HOST=redis
+      - REDIS_HOST=redis
+      # 站点地址（懒猫子域名，token 生成与邮件链接依赖）
+      - OVERLEAF_SITE_URL=https://ayakaleaf.{{ .S.Domain }}
+      # 必需的加密密钥（稳定生成）
+      - OVERLEAF_INVITE_TOKEN_SECRET={{ stable_secret "invite_secret" }}
+      # 首位注册用户自动成为管理员
+      - OVERLEAF_ADMIN_EMAIL={{ .U.admin_email }}
+      - ENABLED_LINKED_FILE_TYPES=project_file,project_output_file
+      # ImageMagick 缩略图
+      - ENABLE_CONVERSIONS=true
+      - EMAIL_CONFIRMATION_DISABLED=true
+      # 沙箱编译关闭：需要宿主 docker.sock（sibling containers），懒猫容器环境不挂载
+      - SANDBOXED_COMPILES=false
+      - DOCKER_RUNNER=false
+    binds:
+      - /lzcapp/var/ayakaleaf/sharelatex:/var/lib/overleaf
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1/health_check
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  mongo:
+    # upstream: mongo:8.0（replSet 必须，Overleaf 依赖事务）
+    image: docker.1ms.run/library/mongo:8.0
+    command: --replSet overleaf
+    environment:
+      - TZ=Asia/Shanghai
+      - MONGO_INITDB_DATABASE=sharelatex
+    binds:
+      - /lzcapp/var/ayakaleaf/mongo:/data/db
+      - /lzcapp/pkg/content/mongodb-init-replica-set.js:/docker-entrypoint-initdb.d/mongodb-init-replica-set.js:ro
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - echo 'db.stats().ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    # upstream: redis:6.2
+    image: docker.1ms.run/library/redis:6.2
+    environment:
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/ayakaleaf/redis:/data

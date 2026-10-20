@@ -1,0 +1,39 @@
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: dist/ayakaleaf.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: sharelatex
+
+build:
+  run_buildscript: false
+
+images:
+  - id: sharelatex
+    target: service
+    service: sharelatex
+    source: sharelatex/sharelatex
+    channel: stable
+    sort: semver
+    tag_regex: '^\d+\.\d+\.\d+$'
+    delivery:
+      mode: mirror
+      require_digest_match: true
+
+stores:
+  official:
+    enabled: false
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: Ayakaleaf Pro
+    summary: "Overleaf 增强版：在线 LaTeX 协作写作"

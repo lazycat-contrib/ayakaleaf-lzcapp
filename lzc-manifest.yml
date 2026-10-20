@@ -7,11 +7,10 @@ application:
   upstreams:
     - location: /
       backend: http://sharelatex:80/
-
 services:
   sharelatex:
-    # upstream: sharelatex/sharelatex:6.3.1（Ayakaleaf Pro，Overleaf 增强版）
-    image: docker.1ms.run/sharelatex/sharelatex:6.3.1@sha256:8aa1d8bff9e45257c5e7ff0f2415c6b0befceec169be86c340eda16e1059fd51
+    # upstream: sharelatex/sharelatex:6.3.1
+    image: docker.1ms.run/sharelatex/sharelatex:6.3.1
     depends_on:
       - mongo
       - redis
@@ -46,7 +45,6 @@ services:
       timeout: 10s
       retries: 5
       start_period: 120s
-
   mongo:
     # upstream: mongo:8.0（replSet 必须，Overleaf 依赖事务）
     image: docker.1ms.run/library/mongo:8.0
@@ -64,7 +62,6 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-
   redis:
     # upstream: redis:6.2
     image: docker.1ms.run/library/redis:6.2

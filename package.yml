@@ -1,5 +1,5 @@
 package: community.lazycat.app.ayakaleaf
-version: 6.3.1
+version: 6.3.2
 name: Ayakaleaf Pro
 description: "The ultimate open-source Overleaf extension and alternative: Overleaf Community Edition enhanced with nearly all Pro features (SSO, AI assistant, Git sync, track changes, Zotero and more)"
 min_os_version: 1.5.0

@@ -9,8 +9,8 @@ application:
       backend: http://sharelatex:80/
 services:
   sharelatex:
-    # upstream: sharelatex/sharelatex:6.3.1
-    image: docker.1ms.run/sharelatex/sharelatex:6.3.1
+    # upstream: sharelatex/sharelatex:6.3.2
+    image: docker.1ms.run/sharelatex/sharelatex:6.3.2
     depends_on:
       - mongo
       - redis
